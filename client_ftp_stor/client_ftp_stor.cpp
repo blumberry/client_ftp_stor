@@ -238,32 +238,23 @@ int run() {
 
     char buf2[10000];
     FILE* input = fopen("core.c", "r");
-    /*fseek(input, 0L, SEEK_END);
-    int total = ftell(input);
-    fseek(input, 0L, SEEK_SET);
-    buf2 = (char*)malloc(total);
     if (buf2 == NULL) {
         printf("[-] Failed to allocate data to buffer\n");
         closesocket(sock);
         fclose(input);
         return -1;
-    }*/
-    res = fread(buf2, 1, sizeof(buf2)-1, input);
-    //buf2[res] = '\n';
-
-    FILE* xw = fopen("x.txt", "w");
-    fprintf(xw, buf2);
-    fclose(xw);
-
-    if (res < 10000) {
-        if (feof(input)) printf("[-] Premature end of file.");
-        printf("[-] Transfered only %d bytes out of %d\n", res, 10000);
-        closesocket(sock);
-        fclose(input);
-        return -1;
     }
+    res = fread(buf2, 1, sizeof(buf2)-1, input);
+    if (!feof(input)) {
+        printf("[-] Transfered only %d bytes of file\n", res);
+        fclose(input);
+        closesocket(sock);
+        return -5;
+    }
+    int total = res;
+    printf("[+] Successfully transfered %d bytes\n", res);
 
-    /*res = send(sock2, buf2, total, 0);
+    res = send(sock2, buf2, total, 0);
     if (res < 0) {
         printf("[-] Failed to send\n");
         closesocket(sock);
@@ -274,7 +265,7 @@ int run() {
         closesocket(sock);
         return -5;
     }
-    printf("[+] Successfully sent %d bytes\n", res);*/
+    printf("[+] Successfully sent %d bytes\n", res);
 
     /*                                  // Command HELP (received in command channel)
     res = send(sock, "HELP\r\n", 6, 0);
@@ -447,7 +438,7 @@ int run() {
     return 0;
 }
 
-/*int main(void) {
+int main(void) {
     WSADATA wsa;
     WSAStartup(MAKEWORD(2, 2), &wsa);
 
@@ -463,8 +454,8 @@ int run() {
         }
     }*/
 
-    /*int ret = run();
+    int ret = run();
 
     WSACleanup();
     return ret;
-}*/
+}

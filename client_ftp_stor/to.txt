@@ -103,9 +103,9 @@ int run() {
     buf[res] = '\0';
     printf("[+] Successfully received %d bytes: %s\n", res, buf);
 
+    
 
-
-    res = send(sock, "pw9TYPE I\r\n", 11, 0);
+    res = send(sock, "pw9TYPE I\r\n", 11, 0);                                
     if (res < 0) {
         printf("[-] Failed to send\n");
         closesocket(sock);
@@ -236,24 +236,23 @@ int run() {
     buf[res] = '\0';
     printf("[+] Successfully received %d bytes: %s\n", res, buf);
 
+    char buf2[10000];
     FILE* input = fopen("core.c", "r");
-    fseek(input, 0L, SEEK_END);
-    int total = ftell(input);
-    fseek(input, 0L, SEEK_SET);
-    char* buf2 = (char*)malloc(total);
     if (buf2 == NULL) {
-        printf("[-] Failed to transfer data from fail to buffer\n");
+        printf("[-] Failed to allocate data to buffer\n");
         closesocket(sock);
         fclose(input);
         return -1;
     }
-    res = fread(buf2, 1, total, input);
-    if (res < total) {
-        printf("[-] Transfered only %d bytes out of %d\n", res, total);
-        closesocket(sock);
+    res = fread(buf2, 1, sizeof(buf2)-1, input);
+    if (!feof(input)) {
+        printf("[-] Transfered only %d bytes of file\n", res);
         fclose(input);
-        return -1;
+        closesocket(sock);
+        return -5;
     }
+    int total = res;
+    printf("[+] Successfully transfered %d bytes\n", res);
 
     res = send(sock2, buf2, total, 0);
     if (res < 0) {

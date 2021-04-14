@@ -7,53 +7,34 @@
 #include <string.h>
 #include <fstream>
 
-int main(void) {
+/*int main(void) {
 
+    char buf2[10000];
 
-    char buf[1000];
-    FILE* input = fopen("to.txt", "r");
-    int total = 0;
-    int res;
-    FILE* output = fopen("x.txt", "w");
-    while (res = fread(buf, 1, sizeof(buf)-2, input) > 0) {
-        
-        buf[sizeof(buf) - 1] = '\0';
-        if (fprintf(output, buf) < res) {
-            printf("[-] Transfered only %d bytes\n", res);
+    FILE* input = fopen("core.c", "r");
 
-            fclose(input);
-            fclose(output);
-            return -2;
-        }
-        total += res;
-        
-        printf("[+] %s", buf);
-    }
-    if (res < 0) {
-        printf("[-] Faild to read data from file\n");
-        fclose(input);
-        fclose(output);
-        return -3;
-    }
-    printf("[+] Successfully sent %d bytes\n", total);
-    fclose(input);
-    fclose(output);
+    fseek(input, 0L, SEEK_END);
+    int total1 = ftell(input);
+    fseek(input, 0L, SEEK_SET);
+    printf("%d", sizeof(buf2));
 
-    /*int res = fread(buf2, 1, sizeof(buf2) - 1, input);
+    int res = fread(buf2, 1, sizeof(buf2) - 1, input);
     int total = res;
     if (feof(input)) {
-        printf("[+] Premature end of file.");
+        printf("[+] Premature end of file\n");
         fclose(input);
     }
     else {
-        printf("[-] Transfered only %d bytes out of %d\n", res, 10000);
+        printf("[-] Transfered only %d bytes out of %d\n", res, total1);
         fclose(input);
         return -1;
     }
-    FILE* x = fopen("x.xtx", "w");
-    fprintf(x, buf2);
-    fclose(x);*/
-
+    printf("[-] Transfered only %d bytes out of %d\n", res, total1);
+    fclose(input);
+    buf2[res] = '\0';
+    FILE* x = fopen("x.txt", "w");
+    fprintf(x, "%s", buf2);
+    fclose(x);
 
     return 1;
-}
+}*/
